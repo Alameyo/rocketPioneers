@@ -19,7 +19,7 @@ public class BrejnRush extends ApplicationAdapter {
 		img = new Texture("gagarin.jpg");
 		font = new BitmapFont();
 	}
-
+//
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
