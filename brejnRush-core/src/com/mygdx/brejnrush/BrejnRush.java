@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -22,6 +23,7 @@ public class MainClass extends ApplicationAdapter {
 	private BitmapFont font;
 	private Rocket wostok, soyuz;
 	private float timeHelper;
+	private float accTimer;
 	private Music music;
 	private Sound engine;
 	private float engineLate;
@@ -32,8 +34,9 @@ public class MainClass extends ApplicationAdapter {
 	public void create() {
 		cam = new OrthographicCamera(1400, 800);
 		batch = new SpriteBatch();
-		//backgroundBatch = new SpriteBatch();
+		
 		background = new Texture(Gdx.files.internal("niebo.png"));
+		background.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 		img = new Texture("gagarin.jpg");
 		rocketVostok = new Texture("rokieta_vostok.png");
 		plomienGraphic = new Texture("plomien.png");
@@ -43,13 +46,15 @@ public class MainClass extends ApplicationAdapter {
 		font.getData().setScale(2);
 		
 
-		wostok = new Rocket(rocketVostok);
+		wostok = new Rocket(rocketVostok, 50f);
 		wostok.x = 100;
 		wostok.y = 10;
-		wostok.height = wostok.getTextura1().getHeight();
-		wostok.width = wostok.getTextura1().getWidth();
+		//wostok.height = wostok.getTextura1().getHeight();
+		//wostok.width = wostok.getTextura1().getWidth();
+		wostok.height = 200;
+		wostok.width = 80;
 
-		soyuz = new Rocket(rocketVostok);
+		soyuz = new Rocket(rocketVostok, 20f);
 		soyuz.x = 300;
 		soyuz.y = 10;
 		soyuz.height = soyuz.getTextura1().getHeight();
@@ -78,13 +83,13 @@ public class MainClass extends ApplicationAdapter {
 		Gdx.gl.glClearColor(10, 10, 10, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	
-		batch.draw(background, -100, -50, 1200, 300000);
-		batch.draw(wostok.getTextura1(), wostok.x, wostok.y);
+		batch.draw(background, wostok.x-1000, -50, 2600, 300000);
+		batch.draw(wostok.getTextura1(), wostok.x, wostok.y, 80, 200);
 		if(ogien ==true){
-		batch.draw(plomienGraphic, wostok.x, wostok.y-110);
+		batch.draw(plomienGraphic, wostok.x+5, wostok.y-70, 70, 80);
 		}
 		batch.draw(soyuz.getTextura1(), soyuz.x, soyuz.y);
-		font.draw(batch, "Poyehali na: "+ wostok.y, 50, wostok.y);
+		font.draw(batch, "Poyehali na: "+ wostok.y, cam.position.x-650, cam.position.y-300);
 
 		batch.end();
 	}
@@ -105,11 +110,17 @@ public class MainClass extends ApplicationAdapter {
 		}
 
 		if (Gdx.input.isKeyPressed(Keys.W)) {
-			wostok.y += 2000 * Gdx.graphics.getDeltaTime();
+			if(accTimer<20){
+				accTimer+=3*Gdx.graphics.getDeltaTime();
+			}
+			wostok.y += (200+wostok.getAcceleration()*accTimer) * Gdx.graphics.getDeltaTime();
 			engine.resume();
 			ogien = true;
 			
 		} else {
+			
+				accTimer=0;
+			
 			engineLate += Gdx.graphics.getDeltaTime();
 			if (engineLate > 0.75f) {
 				ogien = false;
@@ -134,6 +145,13 @@ public class MainClass extends ApplicationAdapter {
 		if (timeHelper > 1) {
 			soyuz.y += 50 * Gdx.graphics.getDeltaTime();
 		}
+		if (Gdx.input.isKeyJustPressed(Keys.M)) {
+			if(music.isPlaying() == true){
+				music.stop();
+			}else{
+				music.play();
+			}
+		}
 	}
 
 	@Override
@@ -142,8 +160,10 @@ public class MainClass extends ApplicationAdapter {
 		img.dispose();
 		font.dispose();
 		music.dispose();
+		plomienGraphic.dispose();
 		background.dispose();
 		engine.dispose();
+		
 		super.dispose();
 	}
 }
