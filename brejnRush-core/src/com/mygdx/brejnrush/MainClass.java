@@ -11,10 +11,9 @@ public class MainClass extends Game {
 
 	@Override
 	public void create() {
-		// this.create();
 
 		batch = new SpriteBatch();
-		this.setScreen(new GameScreen(this));
+		this.setScreen(new MenuScreen(this));
 	}
 
 	@Override
