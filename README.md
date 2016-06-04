@@ -2,7 +2,7 @@
 Purpose of this game is to reminder to people about history of space exploration starting first test flights, through Gagarin as first man out of this planet, Apollo 11 on the Moon, building of International Space Station. The aim is to cover space race between Soviet Unio and United States, joining of new countries like Japan, France, ESA and modern rivalisation between Arianespace and SpaceX.
 
 
-1. Menu - in plan
+1. Menu - in deveopment, first sketch
 2. Astronaut training module - in plan
 3. Rocket flights module                                      - in development
   
